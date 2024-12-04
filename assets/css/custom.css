@@ -1,0 +1,154 @@
+label > input[type="file"] {
+    display: none;
+}
+
+span[validation-for]:empty {
+    display: none;
+}
+
+span[validation-for] {
+    background-color: var(--bs-yellow);
+    padding: 2px 12px;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: .75rem;
+    color: var(--bs-dark);
+    margin-top: .25rem;
+    text-align: left;
+    text-wrap: inherit;
+}
+
+.ar-1-1 {
+    aspect-ratio: 1/1 !important;
+}
+
+.ar-16-9 {
+    aspect-ratio: 16/9 !important;
+}
+
+.ar-16-75 {
+    aspect-ratio: 16/7.5 !important;
+}
+
+table.dataTable tbody td.sorting_1 {
+    background-color: unset !important;
+}
+
+.flex-gap-05 {
+    gap: 0.5rem !important;
+}
+
+.flex-gap-1 {
+    gap: 1rem !important;
+}
+
+.datepicker {
+    padding: 4px !important;
+}
+
+.datepicker td, .datepicker th {
+    padding: .4rem;
+}
+
+.img-cover-center {
+    object-fit: cover !important;
+    object-position: center !important;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.form-group {
+    margin-bottom: .75rem;
+}
+
+.tx-24-f {
+    font-size: 24px !important;
+}
+
+.card {
+    border-top: solid 4px var(--bs-primary);
+}
+
+.card-border-top-bg-primary {
+    border-top: solid 4px var(--bs-primary) !important;
+}
+
+.card-border-top-bg-secondary {
+    border-top: solid 4px var(--bs-secondary) !important;
+}
+
+.card-border-top-bg-info {
+    border-top: solid 4px var(--bs-info) !important;
+}
+
+.card-border-top-bg-warning {
+    border-top: solid 4px var(--bs-warning) !important;
+}
+
+.card-border-top-bg-success {
+    border-top: solid 4px var(--bs-success) !important;
+}
+
+.card-border-top-bg-danger {
+    border-top: solid 4px var(--bs-danger) !important;
+}
+
+.form-group label.lbl-required::before {
+    content: "*";
+    color: var(--bs-danger);
+}
+
+[readonly] {
+    background-color: var(--bs-white) !important;
+}
+
+.datepicker {
+    z-index: 9999 !important;
+}
+
+/* width */
+body ::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+body ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+body ::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+body ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+div.form-control {
+    padding-top: .5rem;
+}
+
+pre {
+    font-family: inherit;   /* Menggunakan font yang sama dengan body */
+    font-size: inherit;     /* Menggunakan ukuran font yang sama dengan body */
+    white-space: pre-wrap;   /* Membungkus teks yang lebih panjang dari lebar elemen */
+    word-wrap: break-word;   /* Memastikan kata-kata panjang dibagi jika perlu */
+}
+
+.card .card-title {
+    margin-bottom: 0 !important;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.tox .tox-tbtn {
+    color: var(--bs-body-color) !important;
+}
