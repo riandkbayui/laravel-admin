@@ -214,6 +214,59 @@
 			</div>
 		</div>
 	</section><!-- End Services Section -->
+	<style>
+		.text-ellipsis {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			display: block;
+		}
+
+		.text-ellipsis-3 {
+			display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+		}
+	</style>
+	@if ($portfolios->count())
+	<!-- ======= Portfolios Section ======= -->
+	<section id="portfolios" class="portfolios">
+		<div class="container" data-aos="fade-up">
+			<div class="section-title">
+				<h2>Portfolio</h2>
+				<p>Berikut ini daftar porftolio dari {{ office("office_name") }}.</p>
+			</div>
+			<div class="row justify-content-center">
+				@foreach ($portfolios as $item)
+					<div class="col-lg-4 p-2">
+						<div class="card overflow-hidden shadow">
+							<div class="card-body p-0">
+								<img src="{{ url($item->thumbnail) }}" class="w-100 ar-16-75 img-cover-center" alt="{{ $item->title }}">
+								<div class="py-2 px-4">
+									<div class="mb-1 badge text-muted">
+										<div class="fsz-14">
+											<i class="bi bi-tag"></i>
+											{{ $item->category }}
+										</div>
+									</div>
+
+									<a class="h4 text-ellipsis" href="{{ url("portfolio/{$item->slug}") }}">{{ $item->title }}</a>
+									<p class="text-muted text-ellipsis-3">{{ $item->description }}</p>
+									<span class="badge text-muted"><i class="bi bi-calendar"></i> {{ display_datetime($item->updated_at) }}</span>
+									<div class="text-center mt-2">
+										<a href="{{ url("portfolio/{$item->slug}") }}" class="get-started-btn scrollto"><i class="bi bi-info-circle"></i> Lihat Detail</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				@endforeach
+			</div>
+		</div>
+	</section><!-- End Portfolios Section -->
+	@endif
 	<!-- ======= Testimonials Section ======= -->
 	<section id="testimonials" class="testimonials">
 		<div class="container" data-aos="fade-up">

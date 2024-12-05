@@ -18,6 +18,7 @@ Route::group(["namespace" => "App\Http\Controllers\Web"], function () {
 	Route::get("home", "Home@index");
 	Route::get("sitemap.xml", "Home@sitemap");
 	Route::get("blogs", "Home@blogs");
+	Route::get("portfolio/{slug}", "Home@portfolio_read");
 	Route::get("blogs/tag/{tag}", "Home@blogTag");
 	Route::get("blogs/category/{tag}", "Home@blogCategory");
 });
@@ -38,6 +39,11 @@ Route::prefix("member")
 			Route::get("create", "Blogs@create");
 			Route::get("update/{id}", "Blogs@update");
 		});
+		Route::prefix("portfolios")->group(function(){
+			Route::get("", "Portfolios@index");
+			Route::get("create", "Portfolios@create");
+			Route::get("update/{id}", "Portfolios@update");
+		});
 	});
 
 Route::prefix("admin")
@@ -49,6 +55,7 @@ Route::prefix("admin")
 			Route::get("create", "Users@create");
 			Route::get("update/{id}", "Users@update");
 		});
+		Route::get("configs", "Configs@index");
 	});
 
 Route::group(["namespace" => "App\Http\Controllers\Web"], function () {

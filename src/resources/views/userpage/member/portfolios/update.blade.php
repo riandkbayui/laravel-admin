@@ -1,24 +1,24 @@
 @section("header")
-<title>Buat Baru | {{ office("office_name") }}</title>
+<title>Perbarui Portfolio | {{ office("office_name") }}</title>
 @endsection
 
-{!! breadcrumb("Buat Baru", ["Member", "Blogs"]) !!}
+{!! breadcrumb("Perbarui Portfolio", ["Member", "Portfolio"]) !!}
 
-<form id="form" action="{{ url("api/blogs/create") }}" method="post">
+<form id="form" action="{{ url("api/portfolios/update") }}" method="post">
 	<div class="row">
 		<div class="col-lg-4">
 			<div class="card">
 				<div class="card-header">
-					<div class="card-title">Thumbnail Blog</div>
+					<div class="card-title">Thumbnail Portfolio</div>
 				</div>
 				<div class="card-body">
 					<div class="text-center mb-2">
-						<img id="img-preview" src="{{ url("assets/uploads/general/placeholder.jpg") }}" class="w-100 ar-16-75 img-cover-center">
+						<img id="img-preview" src="{{ url($portfolio->thumbnail) }}" class="w-100 ar-16-75 img-cover-center">
 						<p class="text-danger">* Pastikan rasio gambar adalah 16:75, atau 1200px:628px.</p>
 					</div>
 					<div class="form-group">
 						<label>Upload Foto</label>
-						<input type="file" name="photo" accept=".jpg,.jpeg,.png" class="form-control" required>
+						<input type="file" name="photo" accept=".jpg,.jpeg,.png" class="form-control">
 						<span validation-for="photo"></span>
 					</div>
 				</div>
@@ -32,23 +32,29 @@
 				<div class="card-body">
 					<div class="form-group">
 						<label>Judul</label>
-						<input name="title" value="" placeholder="Masukkan judul" class="form-control" type="text" autocomplete="off" required>
+						<input name="title" value="{{ $portfolio->title }}" placeholder="Masukkan judul" class="form-control" type="text" autocomplete="off" required>
 						<span validation-for="title"></span>
 					</div>
 					<div class="form-group">
 						<label>Slug</label>
-						<input name="slug" value="" placeholder="Masukkan slug" class="form-control" type="text" autocomplete="off" required>
+						<input name="slug" value="{{ $portfolio->slug }}" placeholder="Masukkan slug" class="form-control" type="text" autocomplete="off" required>
 						<span validation-for="slug"></span>
 					</div>
 					<div class="form-group">
 						<label>Deskripsi</label>
-						<textarea name="description" placeholder="Masukkan deskripsi" class="form-control" rows="4" required></textarea>
+						<textarea name="description" placeholder="Masukkan deskripsi" class="form-control" rows="4" required>{{ $portfolio->description }}</textarea>
 						<span validation-for="description"></span>
+						<input name="id" value="{{ $portfolio->id }}" placeholder="" class="d-none" type="hidden">
 					</div>
 					<div class="form-group">
 						<label>Konten</label>
-						<textarea name="content" placeholder="Masukkan konten" class="form-control" rows="10"></textarea>
+						<textarea name="content" placeholder="Masukkan konten" class="form-control d-none" rows="10">{{ $portfolio->content }}</textarea>
 						<span validation-for="content"></span>
+					</div>
+					<div class="form-group">
+						<label>Informasi</label>
+						<textarea name="information" placeholder="Masukkan informasi" class="form-control d-none" rows="10">{{ $portfolio->information }}</textarea>
+						<span validation-for="information"></span>
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
@@ -56,17 +62,10 @@
 								<label>Kategori</label>
 								<select class="form-control" name="category" required>
 									@foreach ($categories as $item)
-									    <option value="{{$item}}">{{$item}}</option>
+									    <option value="{{$item}}" {!! is_selected($item==$portfolio->category) !!}>{{$item}}</option>
 									@endforeach
 								</select>
 								<span validation-for="category"></span>
-							</div>
-						</div>
-						<div class="col-lg-8">
-							<div class="form-group">
-								<label>Tags</label>
-								<select class="form-control" name="tags[]" multiple="multiple" required></select>
-								<span validation-for="tags"></span>
 							</div>
 						</div>
 					</div>
@@ -74,18 +73,18 @@
 						<label>Status</label>
 						<div class="d-flex gap-2">
 							<label class="cursor-pointer">
-								<input type="radio" name="status" value="Publish" checked>
-								<span>Publish</span>
+								<input type="radio" name="status" value="Show" {!! is_checked($portfolio->status=="Show") !!}>
+								<span>Tampil</span>
 							</label>
 							<label class="cursor-pointer">
-								<input type="radio" name="status" value="Draft">
-								<span>Draft</span>
+								<input type="radio" name="status" value="Hide" {!! is_checked($portfolio->status=="Hide") !!}>
+								<span>Sembunyi</span>
 							</label>
 						</div>
 					</div>
 				</div>
 				<div class="card-footer">
-					<button class="w-100 btn btn-primary">Buat Postingan</button>
+					<button class="w-100 btn btn-primary">Perbarui Portfolio</button>
 				</div>
 			</div>
 		</div>
@@ -139,18 +138,16 @@
 			});
 		});
 
-		$(`select[name^="tags"]`).select2({
+		$(`select[name^="category"]`).select2({
 		  width: '100%',
 		  tags: true
 		});
 
-		$(`select[name^="category"]`).select2({
-		  width: '100%',
-		  tags: true,
-		  placeholder: "Masukkan kategori"
+		$(`textarea[name="content"]`).tinymceSetup({
+			upload_path: base_url(`/api/portfolios/upload_img`)
 		});
 
-		$(`textarea[name="content"]`).tinymceSetup({
+		$(`textarea[name="information"]`).tinymceSetup({
 			upload_path: base_url(`/api/portfolios/upload_img`)
 		});
 
@@ -166,7 +163,6 @@
 
 			$('input[name="slug"]').val(val);
 		});
-
 	});
 </script>
 @endsection

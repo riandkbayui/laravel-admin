@@ -2,14 +2,14 @@
 <title>Buat Baru | {{ office("office_name") }}</title>
 @endsection
 
-{!! breadcrumb("Buat Baru", ["Member", "Blogs"]) !!}
+{!! breadcrumb("Buat Baru", ["Member", "Portfolio"]) !!}
 
-<form id="form" action="{{ url("api/blogs/create") }}" method="post">
+<form id="form" action="{{ url("api/portfolios/create") }}" method="post">
 	<div class="row">
 		<div class="col-lg-4">
 			<div class="card">
 				<div class="card-header">
-					<div class="card-title">Thumbnail Blog</div>
+					<div class="card-title">Thumbnail Portfolio</div>
 				</div>
 				<div class="card-body">
 					<div class="text-center mb-2">
@@ -50,6 +50,11 @@
 						<textarea name="content" placeholder="Masukkan konten" class="form-control" rows="10"></textarea>
 						<span validation-for="content"></span>
 					</div>
+					<div class="form-group">
+						<label>Informasi</label>
+						<textarea name="information" placeholder="Masukkan information" class="form-control" rows="10"></textarea>
+						<span validation-for="information"></span>
+					</div>
 					<div class="row">
 						<div class="col-lg-4">
 							<div class="form-group">
@@ -62,30 +67,23 @@
 								<span validation-for="category"></span>
 							</div>
 						</div>
-						<div class="col-lg-8">
-							<div class="form-group">
-								<label>Tags</label>
-								<select class="form-control" name="tags[]" multiple="multiple" required></select>
-								<span validation-for="tags"></span>
-							</div>
-						</div>
 					</div>
 					<div class="form-group">
 						<label>Status</label>
 						<div class="d-flex gap-2">
 							<label class="cursor-pointer">
-								<input type="radio" name="status" value="Publish" checked>
-								<span>Publish</span>
+								<input type="radio" name="status" value="Show" checked>
+								<span>Tampil</span>
 							</label>
 							<label class="cursor-pointer">
-								<input type="radio" name="status" value="Draft">
-								<span>Draft</span>
+								<input type="radio" name="status" value="Hide">
+								<span>Sembunyi</span>
 							</label>
 						</div>
 					</div>
 				</div>
 				<div class="card-footer">
-					<button class="w-100 btn btn-primary">Buat Postingan</button>
+					<button class="w-100 btn btn-primary">Buat Portfolio</button>
 				</div>
 			</div>
 		</div>
@@ -139,11 +137,6 @@
 			});
 		});
 
-		$(`select[name^="tags"]`).select2({
-		  width: '100%',
-		  tags: true
-		});
-
 		$(`select[name^="category"]`).select2({
 		  width: '100%',
 		  tags: true,
@@ -151,6 +144,10 @@
 		});
 
 		$(`textarea[name="content"]`).tinymceSetup({
+			upload_path: base_url(`/api/portfolios/upload_img`)
+		});
+
+		$(`textarea[name="information"]`).tinymceSetup({
 			upload_path: base_url(`/api/portfolios/upload_img`)
 		});
 

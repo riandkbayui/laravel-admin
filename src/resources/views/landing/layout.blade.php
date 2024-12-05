@@ -22,6 +22,7 @@
 	<link href="{{url("statics/vendor/remixicon/remixicon.css")}}" rel="stylesheet">
 	<link href="{{url("statics/vendor/swiper/swiper-bundle.min.css")}}" rel="stylesheet">
 	<link href="{{url("statics/css/style.css")}}" rel="stylesheet">
+	<link href="{{url("assets/css/fontsizes.css")}}" rel="stylesheet">
 
 	@yield('style')
 

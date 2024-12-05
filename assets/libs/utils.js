@@ -173,6 +173,76 @@ $(function() {
 		});
 	}
 
+	
+
+	$.fn.tinymceSetup = function(configs) {
+		$(this).tinymce({
+			height: 480,
+			plugins: [
+				"advlist autolink link image lists charmap print preview hr anchor pagebreak",
+				"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+				"save table directionality emoticons template paste"
+			],
+			toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
+			setup: function (editor) {
+				editor.on('change', function () {
+					editor.save();
+				});
+			},
+			image_class_list: [
+				{title: 'Default', value: 'img-fluid'},
+				{title: 'Width 100%', value: 'w-100'},
+			],
+			relative_urls: false,
+			remove_script_host: true,
+			document_base_url: '',
+			automatic_uploads: true,
+			images_upload_handler: function (blobInfo, success, failure, progress) {
+				var xhr, formData;
+
+				xhr = new XMLHttpRequest();
+				xhr.withCredentials = false;
+				xhr.open('POST', configs.upload_path);
+
+				xhr.upload.onprogress = function(e) {
+					progress(e.loaded / e.total * 100);
+				};
+
+				xhr.onload = function() {
+					var json;
+
+					if (xhr.status === 403) {
+						failure('HTTP Error: ' + xhr.status, {
+							remove: true
+						});
+						return;
+					}
+
+					if (xhr.status < 200 || xhr.status >= 300) {
+						failure('HTTP Error: ' + xhr.status);
+						return;
+					}
+
+					json = JSON.parse(xhr.responseText);
+					if (!json || typeof json.url != 'string') {
+						failure('Invalid JSON: ' + xhr.responseText);
+						return;
+					}
+					success(json.url);
+				};
+
+				xhr.onerror = function() {
+					failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+				};
+
+				formData = new FormData();
+				formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+				xhr.send(formData);
+			},
+		});
+	}
+
 });
 
 function idDateFormat(data) {

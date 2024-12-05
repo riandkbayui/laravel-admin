@@ -99,6 +99,12 @@
                                 <span>Blogs</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{url("member/portfolios")}}">
+                                <i class="mdi mdi-briefcase-account"></i>
+                                <span>Portfolio</span>
+                            </a>
+                        </li>
                         @if (user("role")=="admin")
                             
                         @endif
@@ -109,6 +115,7 @@
                             </a>
                             <ul class="sub-menu mm-collapse" aria-expanded="true">
                                 <li><a href="{{ url("admin/users"); }}">Pengguna</a></li>
+                                <li><a href="{{ url("admin/configs"); }}">Konfigurasi</a></li>
                             </ul>
                         </li>
                         <li>

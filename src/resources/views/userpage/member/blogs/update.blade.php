@@ -36,6 +36,11 @@
 						<span validation-for="title"></span>
 					</div>
 					<div class="form-group">
+						<label>Slug</label>
+						<input name="slug" value="{{ $blog->slug }}" placeholder="Masukkan slug" class="form-control" type="text" autocomplete="off" required>
+						<span validation-for="slug"></span>
+					</div>
+					<div class="form-group">
 						<label>Deskripsi</label>
 						<textarea name="description" placeholder="Masukkan deskripsi" class="form-control" rows="4" required>{{ $blog->description }}</textarea>
 						<span validation-for="description"></span>
@@ -139,16 +144,6 @@
 			});
 		});
 
-		// $(`select[name="category"]`).select2x({
-		//   width: '100%',
-		//   tags: true,
-		//   xhr: {
-		//     url: base_url('/api/blogs/categories'),
-		//     type: 'GET',
-		//     dataSrc: 'data'
-		//   }
-		// });
-
 		$(`select[name^="tags"]`).select2({
 		  width: '100%',
 		  tags: true
@@ -159,73 +154,9 @@
 		  tags: true
 		});
 
-		$(`textarea[name="content"]`).tinymce({
-			height: 480,
-			plugins: [
-				"advlist autolink link image lists charmap print preview hr anchor pagebreak",
-				"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-				"save table directionality emoticons template paste"
-			],
-			toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
-			setup: function (editor) {
-				editor.on('change', function () {
-					editor.save();
-				});
-			},
-			image_class_list: [
-				{title: 'Default', value: 'img-fluid'},
-				{title: 'Width 100%', value: 'w-100'},
-			],
-			relative_urls: false,
-			remove_script_host: true,
-			document_base_url: '',
-			automatic_uploads: true,
-			images_upload_handler: handleImageUpload,
+		$(`textarea[name="content"]`).tinymceSetup({
+			upload_path: base_url(`/api/portfolios/upload_img`)
 		});
-
-		function handleImageUpload(blobInfo, success, failure, progress) {
-			var xhr, formData;
-
-			xhr = new XMLHttpRequest();
-			xhr.withCredentials = false;
-			xhr.open('POST', base_url(`/api/blogs/upload_img`));
-
-			xhr.upload.onprogress = function(e) {
-				progress(e.loaded / e.total * 100);
-			};
-
-			xhr.onload = function() {
-				var json;
-
-				if (xhr.status === 403) {
-					failure('HTTP Error: ' + xhr.status, {
-						remove: true
-					});
-					return;
-				}
-
-				if (xhr.status < 200 || xhr.status >= 300) {
-					failure('HTTP Error: ' + xhr.status);
-					return;
-				}
-
-				json = JSON.parse(xhr.responseText);
-				if (!json || typeof json.url != 'string') {
-					failure('Invalid JSON: ' + xhr.responseText);
-					return;
-				}
-				success(json.url);
-			};
-
-			xhr.onerror = function() {
-				failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-			};
-
-			formData = new FormData();
-			formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-			xhr.send(formData);
-		};
 
 		$(`input[name="photo"]`).previewImgTo(`#img-preview`);
 

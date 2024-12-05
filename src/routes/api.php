@@ -27,11 +27,21 @@ Route::namespace("App\Http\Controllers\Api")
 				Route::post("create", "Blogs@create");
 				Route::post("update", "Blogs@update");
 			});
+			Route::prefix("portfolios")->group(function(){
+				Route::post("datatable", "Portfolios@datatable");
+				Route::post("upload_img", "Portfolios@upload_img");
+				Route::post("create", "Portfolios@create");
+				Route::post("update", "Portfolios@update");
+			});
 			Route::middleware("roleCheck:admin")->group(function(){
 				Route::prefix("users")->group(function(){
 					Route::post("datatable", "Users@datatable");
 					Route::post("update", "Users@update");
 					Route::post("create", "Users@create");
+				});
+				Route::prefix("configs")->group(function(){
+					Route::post("datatable", "Configs@datatable");
+					Route::post("update", "Configs@update");
 				});
 			});
 		});

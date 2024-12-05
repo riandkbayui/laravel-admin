@@ -1,18 +1,18 @@
 @section('header')
-<title>Blogs | {{ office("office_name") }}</title>
+<title>Portfolio | {{ office("office_name") }}</title>
 @endsection
 
 @section('breadcrumb-action')
 <div class="text-end mt-2">
-    <a href="{{ url("member/blogs/create") }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Buat Baru</a>
+    <a href="{{ url("member/portfolios/create") }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i> Buat Baru</a>
 </div>
 @endsection
 
-{!! breadcrumb("Blogs", ["Member"]) !!}
+{!! breadcrumb("Portfolio", ["Member"]) !!}
 
 <div class="card">
     <div class="card-header">
-        <div class="card-title">Daftar Blog</div>
+        <div class="card-title">Daftar Portfolio</div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -22,7 +22,6 @@
                         <th>Tanggal</th>
                         <th>Judul</th>
                         <th>Kategori</th>
-                        <th>Tag</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -40,7 +39,7 @@
     $(document).ready(function () {
         const table = $('#table').DataTable({
             'ajax':{
-                'url'		: base_url('api/blogs/datatable'),
+                'url'		: base_url('api/portfolios/datatable'),
                 'dataSrc'	: 'data',
                 'type'		: 'POST'
             },
@@ -58,11 +57,10 @@
                 {data: "created_at", render: v => idDateTimeFormat(v)},
                 {data: "title", className: "text-wrap"},
                 {data: "category"},
-                {data: "tags", className: "text-wrap"},
                 {data: "status"},
                 {data: "id", render: function(data, i, row){
-                    const slug = base_url(row.slug);
-                    const urledit = base_url(`member/blogs/update/${row.id}`);
+                    const slug = base_url(`portfolio/${row.slug}`);
+                    const urledit = base_url(`member/portfolios/update/${row.id}`);
                     return (`
                         <div class="d-flex gap-2">
                             <a target="_blank" class="btn btn-sm btn-primary" href="${slug}"><i class="fa fa-link"></i></a>

@@ -13,15 +13,26 @@ class Home extends BaseController {
 
     public function sitemap(){
         $sitemaper = sitemaper();
+
+        $sitemaper->addUrl(url("/"), now()->toAtomString(), 'daily', '1.0');
+        $sitemaper->addUrl(url("blogs"), now()->toAtomString(), 'daily', '1.0');
+        
+        $portfolios = service("portfolios")->findAll([
+            ["where", "status", "show"],
+            ["orderBy", "updated_at", "desc"],
+            ["orderBy", "id", "desc"],
+        ]);
+
+        foreach ($portfolios as $port) {
+            $sitemaper->addUrl(url("protfolio/{$port->slug}"), $port->updated_at->toAtomString(), 'weekly', '0.8');
+        }
+        
         $blogs = service("blogs")->findAll([
             ["where", "status", "publish"],
             ["orderBy", "publish_at", "desc"],
             ["orderBy", "id", "desc"],
         ]);
 
-        $sitemaper->addUrl(url("/"), now()->toAtomString(), 'daily', '1.0');
-        $sitemaper->addUrl(url("blogs"), now()->toAtomString(), 'daily', '1.0');
-        
         foreach ($blogs as $blog) {
             $sitemaper->addUrl(url($blog->slug), $blog->updated_at->toAtomString(), 'weekly', '0.8');
         }
@@ -30,7 +41,11 @@ class Home extends BaseController {
     }
 
     public function index() {
-    	return $this->renderLanding("landing/home");
+        $portfolios = service("portfolios")->findAll([
+            ["where", "status", "show"],
+            ["orderBy", "updated_at", "desc"]
+        ]);
+    	return $this->renderLanding("landing/home", compact("portfolios"));
     }
 
     public function blogs() {
@@ -81,6 +96,21 @@ class Home extends BaseController {
             return $this->renderLanding("landing/blog_read", compact("blog", "blogtags", "categories", "tags"));
         } else {
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(lang("res.not_found", ["blog"]));
+        }
+    }
+
+    public function portfolio_read($slug){
+        $portfolio = service("portfolios")->findOne([
+            ["where", "status", "show"],
+            ["where", "slug", $slug],
+            ["orderBy", "updated_at", "desc"],
+            ["orderBy", "id", "desc"],
+        ]);
+
+        if($portfolio) {
+            return $this->renderLanding("landing/portfolio_read", compact("portfolio"));
+        } else {
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(lang("res.not_found", ["Portfolio"]));
         }
     }
 

@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\BaseController;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
-class Blogs extends BaseController {
+class Portfolios extends BaseController {
 
-    private $upload_path = "assets/uploads/blogs/";
+    private $upload_path = "assets/uploads/portfolios/";
 
     public function __construct() {
         parent::__construct();
@@ -16,8 +15,8 @@ class Blogs extends BaseController {
     }
 
     public function datatable() {;
-        $dt = service("datatables", "blogs");
-        $dt->select(["created_at", "title", "category", "status", "id", "tags", "slug"]);
+        $dt = service("datatables", "portfolios");
+        $dt->select(["created_at", "title", "category", "status", "id", "slug"]);
         return $dt->renderResult();
     }
 
@@ -51,13 +50,13 @@ class Blogs extends BaseController {
             $request = request();
             $request->validate([
                 "photo"       => ['required','image','mimes:jpeg,png,jpg','max:2048'],
-                "slug"        => ["required", Rule::unique("blogs", "slug")],
+                "slug"        => ["required", Rule::unique("portfolios", "slug")],
                 "title"       => ["required"],
                 "description" => ["required"],
                 "content"     => ["required"],
+                "information" => ["required"],
                 "category"    => ["required"],
-                "tags"        => ["required"],
-                "status"      => ["required", "in:Publish,Draft"],
+                "status"      => ["required", "in:Show,Hide"],
             ]);
 
             $image = $request->file('photo');
@@ -66,44 +65,22 @@ class Blogs extends BaseController {
             ]);
             $link = $this->upload_path . $filename;
 
-            $db = db_connect();
-            $db->transStart();
-            $tags = $request->post("tags");
-            $status = $request->post("status");
-
             $createData = [
                 "thumbnail"   => $link,
                 "slug"        => $request->post("slug"),
                 "title"       => $request->post("title"),
                 "description" => $request->post("description"),
                 "content"     => $request->post("content"),
+                "information" => $request->post("information"),
                 "category"    => $request->post("category"),
-                "tags"        => json_encode($tags),
-                "status"      => $status,
+                "status"      => $request->post("status"),
             ];
 
-            if(strtolower($status)=="publish") {
-                $createData['publish_at'] = date("Y-m-d H:i:s");
-            }
-
-            service("blogs")->create($createData);
-
-            foreach ($tags as $tag) {
-                $checkTag = service("tags")->findOne([
-                    ["where", "name", $tag]
-                ]);
-
-                if($checkTag) { continue; }
-
-                service("tags")->create([
-                    "name" => $tag
-                ]);
-            }
-            $db->transComplete();
+            service("portfolios")->create($createData);
 
             return response([
-                "message" => lang("res.created", ["Post"]),
-                "redirect_to" => url("member/blogs")
+                "message" => lang("res.created", ["Portfolio"]),
+                "redirect_to" => url("member/portfolios")
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) { 
             return response([
@@ -121,31 +98,28 @@ class Blogs extends BaseController {
         try {
 
             $request = request();
+
             $id = filter_var($request->post("id"), FILTER_SANITIZE_NUMBER_INT);
             
-            $blogCheck = service("blogs")->findOne([
+            $portCheck = service("portfolios")->findOne([
                 ["where", "id", $id]
             ]);
 
-            if(!$blogCheck) {
-                throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(lang("res.not_found", ["blog"]));
+            if(!$portCheck) {
+                throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(lang("res.not_found", ["portfolio"]));
             }
 
             $request->validate([
                 "id"          => ["required"],
                 "title"       => ["required"],
-                "slug"        => ["required", Rule::unique("blogs", "slug")->ignore($id, "id")],
+                "slug"        => ["required", Rule::unique("portfolios", "slug")->ignore($id, "id")],
                 "description" => ["required"],
                 "content"     => ["required"],
+                "information" => ["required"],
                 "category"    => ["required"],
-                "tags"        => ["required"],
-                "status"      => ["required", "in:Publish,Draft"],
+                "status"      => ["required", "in:Show,Hide"],
             ]);
-
-            $db = db_connect();
-            $db->transStart();
-            $tags = $request->post("tags");
-            $status = $request->post("status");
+            
             $image = $request->file('photo');
 
             $updateData = [
@@ -153,9 +127,9 @@ class Blogs extends BaseController {
                 "title"       => $request->post("title"),
                 "description" => $request->post("description"),
                 "content"     => $request->post("content"),
+                "information" => $request->post("information"),
                 "category"    => $request->post("category"),
-                "tags"        => json_encode($tags),
-                "status"      => $status,
+                "status"      => $request->post("status"),
             ];
 
             if($image) {
@@ -169,31 +143,13 @@ class Blogs extends BaseController {
                  }
             }
 
-            if(strtolower($status)=="publish") {
-                $updateData['publish_at'] = date("Y-m-d H:i:s");
-            } else {
-                $updateData['publish_at'] = null;
-            }
-
-            service("blogs")->update($id, $updateData);
-
-            foreach ($tags as $tag) {
-                $checkTag = service("tags")->findOne([
-                    ["where", "name", $tag]
-                ]);
-
-                if($checkTag) { continue; }
-
-                service("tags")->create([
-                    "name" => $tag
-                ]);
-            }
-            $db->transComplete();
+            service("portfolios")->update($id, $updateData);
 
             return response([
                 "message" => lang("res.updated", ["Post"]),
-                "redirect_to" => url("member/blogs")
+                "redirect_to" => url("member/portfolios")
             ]);
+
         } catch (\Illuminate\Validation\ValidationException $e) { 
             return response([
                 "message" => lang("res.form_fail"),

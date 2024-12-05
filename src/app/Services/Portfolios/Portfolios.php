@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Services\Blogs;
+namespace App\Services\Portfolios;
 
 use App\Services\BaseServices;
 use Exception;
 
-class Blogs extends BaseServices {
+class Portfolios extends BaseServices {
 
     public $model;
     protected $primary_key;
 
     public function __construct() {
         parent::__construct();
-        $this->model = model("BlogsModel");
-        $this->primary_key = "blogs.id";
+        $this->model = model("PortfoliosModel");
+        $this->primary_key = "portfolios.id";
     }
 
     public function findOne($filter="") {

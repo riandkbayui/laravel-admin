@@ -42,6 +42,7 @@ class Users extends BaseController {
                 "name" => $request->post("name"),
                 "phone" => filter_var($request->post("phone"), FILTER_SANITIZE_NUMBER_INT),
                 "password" => filter_var($request->post("password"), FILTER_CALLBACK, ["options" => "inputPassword"]),
+                "role" => "member",
             ];
             
             if($image) {

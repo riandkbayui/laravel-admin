@@ -31,7 +31,12 @@ class Attempts extends BaseServices {
         } else if (is_numeric($filter)) {
             $db = $this->model->where($this->primary_key, $filter);
         }
-        return $db->first();
+        
+        if(is_null($db)) {
+            return $this->model->first();
+        } else {
+            return $db->first();
+        }
     }
 
     public function findAll($filter="") {
@@ -47,7 +52,12 @@ class Attempts extends BaseServices {
                 }
             }
         }
-        return $db->get();
+
+        if(is_null($db)) {
+            return $this->model->get();
+        } else {
+            return $db->get();
+        }
     }
 
     public function create($data) {
