@@ -70,7 +70,7 @@
 							<i class="bi bi-folder"></i>
 							<ul class="cats">
 								<li>
-									<a href="{{ url("blogs/tag/{$blog->category}") }}">{{$blog->category}}</a>
+									<a href="{{ url("blogs/category/{$blog->category}") }}">{{$blog->category}}</a>
 								</li>
 							</ul>
 
